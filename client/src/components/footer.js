@@ -164,7 +164,7 @@ export function Footer() {
                     size={18}
                     className="text-[#F47C20] mr-2 flex-shrink-0"
                   />
-                  <span>connect.GenuinePharmacy@gmail.com</span>
+                  <span>connect.genuinepharmacy@gmail.com</span>
                 </div>
 
               </div>
