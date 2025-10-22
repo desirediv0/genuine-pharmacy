@@ -24,7 +24,7 @@ import { useAddVariantToCart } from "@/lib/cart-utils";
 
 // Helper function to format image URLs correctly
 const getImageUrl = (image) => {
-  if (!image) return "/product-placeholder.jpg";
+  if (!image) return "/product-placeholder.png";
   if (image.startsWith("http")) return image;
   return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
 };
@@ -64,7 +64,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
 
     if (product) {
       // Set initial image when product changes
-      setImgSrc(product.image || "/product-placeholder.jpg");
+      setImgSrc(product.image || "/product-placeholder.png");
     }
   }, [product, open]);
 
@@ -86,8 +86,8 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
           if (productData.images && productData.images.length > 0) {
             setImgSrc(
               getImageUrl(productData.images[0].url) ||
-                getImageUrl(productData.image) ||
-                "/product-placeholder.jpg"
+              getImageUrl(productData.image) ||
+              "/product-placeholder.png"
             );
           }
 
@@ -381,7 +381,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
     }
 
     // Final fallback
-    return imgSrc || "/placeholder.jpg";
+    return imgSrc || "/placeholder.png";
   };
 
   // Format price display
@@ -483,7 +483,7 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                 fill
                 className="object-contain p-2"
                 sizes="(max-width: 768px) 100vw, 400px"
-                onError={() => setImgSrc("/product-placeholder.jpg")}
+                onError={() => setImgSrc("/product-placeholder.png")}
               />
               {displayProduct.hasSale && (
                 <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
@@ -520,11 +520,10 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`h-4 w-4 ${
-                          star <= Math.round(displayProduct.avgRating || 0)
+                        className={`h-4 w-4 ${star <= Math.round(displayProduct.avgRating || 0)
                             ? "text-yellow-400 fill-yellow-400"
                             : "text-gray-300"
-                        }`}
+                          }`}
                       />
                     ))}
                   </div>
@@ -559,13 +558,12 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                             type="button"
                             onClick={() => handleFlavorChange(flavor)}
                             disabled={!isAvailable}
-                            className={`px-3 py-2 rounded-md border text-sm transition-all ${
-                              selectedFlavor?.id === flavor.id
+                            className={`px-3 py-2 rounded-md border text-sm transition-all ${selectedFlavor?.id === flavor.id
                                 ? "border-primary bg-primary/10 text-primary font-medium"
                                 : isAvailable
-                                ? "border-gray-300 hover:border-gray-400"
-                                : "border-gray-200 text-gray-400 cursor-not-allowed"
-                            }`}
+                                  ? "border-gray-300 hover:border-gray-400"
+                                  : "border-gray-200 text-gray-400 cursor-not-allowed"
+                              }`}
                           >
                             {flavor.name}
                           </button>
@@ -589,10 +587,10 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                         );
                         const isAvailable = selectedFlavor
                           ? availableCombinations.some(
-                              (combo) =>
-                                combo.flavorId === selectedFlavor.id &&
-                                combo.weightId === weight.id
-                            )
+                            (combo) =>
+                              combo.flavorId === selectedFlavor.id &&
+                              combo.weightId === weight.id
+                          )
                           : availableFlavorIds.length > 0;
 
                         return (
@@ -601,13 +599,12 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
                             type="button"
                             onClick={() => handleWeightChange(weight)}
                             disabled={!isAvailable}
-                            className={`px-3 py-2 rounded-md border text-sm transition-all ${
-                              selectedWeight?.id === weight.id
+                            className={`px-3 py-2 rounded-md border text-sm transition-all ${selectedWeight?.id === weight.id
                                 ? "border-primary bg-primary/10 text-primary font-medium"
                                 : isAvailable
-                                ? "border-gray-300 hover:border-gray-400"
-                                : "border-gray-200 text-gray-400 cursor-not-allowed"
-                            }`}
+                                  ? "border-gray-300 hover:border-gray-400"
+                                  : "border-gray-200 text-gray-400 cursor-not-allowed"
+                              }`}
                           >
                             {weight.value} {weight.unit}
                           </button>
@@ -621,11 +618,10 @@ export default function ProductQuickView({ product, open, onOpenChange }) {
               {selectedVariant && (
                 <div className="mb-4">
                   <span
-                    className={`text-sm ${
-                      selectedVariant.quantity > 0
+                    className={`text-sm ${selectedVariant.quantity > 0
                         ? "text-green-600"
                         : "text-red-600"
-                    }`}
+                      }`}
                   >
                     {selectedVariant.quantity > 0
                       ? `In Stock (${selectedVariant.quantity} available)`

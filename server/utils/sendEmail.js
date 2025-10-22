@@ -11,7 +11,6 @@ const sendEmail = async (options) => {
     );
 
     if (!hasSmtpCreds && process.env.NODE_ENV !== "production") {
-      // Dev fallback: use Ethereal test account if SMTP is not configured
       const testAccount = await nodemailer.createTestAccount();
       transporter = nodemailer.createTransport({
         host: "smtp.ethereal.email",
@@ -29,7 +28,7 @@ const sendEmail = async (options) => {
       const port = Number(process.env.SMTP_PORT || 587);
       const secure = process.env.SMTP_SECURE
         ? String(process.env.SMTP_SECURE).toLowerCase() === "true"
-        : port === 465; // 465 is implicit TLS
+        : port === 465;
 
       const transportConfig = process.env.SMTP_SERVICE
         ? {
@@ -78,7 +77,6 @@ const sendEmail = async (options) => {
 
     const info = await transporter.sendMail(mailOptions);
 
-    // Log preview URL for Ethereal in dev
     if (process.env.NODE_ENV !== "production" && nodemailer.getTestMessageUrl) {
       const previewUrl = nodemailer.getTestMessageUrl(info);
       if (previewUrl) {

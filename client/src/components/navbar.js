@@ -111,7 +111,6 @@ export function Navbar() {
     await logout();
     // Show logout toast notification
     toast.success("Logged out successfully");
-    // Force reload to ensure UI updates correctly
     window.location.href = "/";
   };
 
@@ -219,15 +218,6 @@ export function Navbar() {
               </div>
             </div>
 
-            <div className="border-b pb-4 mb-4">
-              <Link
-                href="/blog"
-                className="block py-3 text-lg font-medium hover:text-primary transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Blog
-              </Link>
-            </div>
 
             <div className="border-b pb-4 mb-4">
               <Link
@@ -494,13 +484,6 @@ export function Navbar() {
                 </div>
 
                 <Link
-                  href="/blog"
-                  className="font-medium text-gray-700 hover:text-primary transition-colors"
-                >
-                  Blog
-                </Link>
-
-                <Link
                   href="/about"
                   className="font-medium text-gray-700 hover:text-primary transition-colors"
                 >
@@ -517,115 +500,117 @@ export function Navbar() {
 
               {/* Search, Cart, Account */}
               <div className="flex items-center space-x-1 md:space-x-4">
-                {/* Search button/form */}
-                <div className="relative">
-                  {isSearchExpanded ? (
-                    <>
-                      <div
-                        className="fixed inset-0 bg-black/50 z-40"
-                        onClick={() => setIsSearchExpanded(false)}
-                      />
-                      <div className="fixed inset-x-0 top-0 z-50 w-full animate-in slide-in-from-top duration-300 p-2">
-                        <form
-                          onSubmit={handleSearch}
-                          className="relative bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden max-h-[90vh] md:max-w-[600px] mx-auto"
-                        >
-                          <div className="flex items-center px-4 py-4 border-b border-gray-100">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              Search Products
-                            </h3>
-                            <button
-                              type="button"
-                              className="ml-auto p-2 rounded-full hover:bg-gray-100 transition-all duration-200"
-                              onClick={() => setIsSearchExpanded(false)}
-                              aria-label="Close search"
-                            >
-                              <X className="h-6 w-6 text-gray-500" />
-                            </button>
-                          </div>
-
-                          <div className="p-5">
-                            <div className="relative">
-                              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                              <Input
-                                ref={searchInputRef}
-                                type="search"
-                                placeholder={placeholders[placeholderIndex]}
-                                className="w-full pl-12 pr-12 py-3 border-gray-200 focus:border-primary focus:ring-primary rounded-lg text-base"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                autoComplete="off"
-                              />
-                              {searchQuery && (
-                                <button
-                                  type="button"
-                                  className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
-                                  onClick={() => setSearchQuery("")}
-                                  aria-label="Clear search"
-                                >
-                                  <X className="h-5 w-5" />
-                                </button>
-                              )}
+                {/* Search button/form - hide on home (/) */}
+                {pathname !== "/" && (
+                  <div className="relative">
+                    {isSearchExpanded ? (
+                      <>
+                        <div
+                          className="fixed inset-0 bg-black/50 z-40"
+                          onClick={() => setIsSearchExpanded(false)}
+                        />
+                        <div className="fixed inset-x-0 top-0 z-50 w-full animate-in slide-in-from-top duration-300 p-2">
+                          <form
+                            onSubmit={handleSearch}
+                            className="relative bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden max-h-[90vh] md:max-w-[600px] mx-auto"
+                          >
+                            <div className="flex items-center px-4 py-4 border-b border-gray-100">
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                Search Products
+                              </h3>
+                              <button
+                                type="button"
+                                className="ml-auto p-2 rounded-full hover:bg-gray-100 transition-all duration-200"
+                                onClick={() => setIsSearchExpanded(false)}
+                                aria-label="Close search"
+                              >
+                                <X className="h-6 w-6 text-gray-500" />
+                              </button>
                             </div>
 
-                            <div className="mt-4">
-                              <h4 className="text-sm font-medium text-gray-500 mb-2">
-                                Popular Searches
-                              </h4>
-                              <div className="flex flex-wrap gap-2">
-                                {[
-                                  "Protein Powder",
-                                  "Gainer",
-                                  "Bcaa",
-                                  "Creatine",
-                                ].map((term) => (
+                            <div className="p-5">
+                              <div className="relative">
+                                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                <Input
+                                  ref={searchInputRef}
+                                  type="search"
+                                  placeholder={placeholders[placeholderIndex]}
+                                  className="w-full pl-12 pr-12 py-3 border-gray-200 focus:border-primary focus:ring-primary rounded-lg text-base"
+                                  value={searchQuery}
+                                  onChange={(e) => setSearchQuery(e.target.value)}
+                                  autoComplete="off"
+                                />
+                                {searchQuery && (
                                   <button
-                                    key={term}
                                     type="button"
-                                    onClick={() => {
-                                      setSearchQuery(term);
-                                      handleSearch({
-                                        preventDefault: () => { },
-                                      });
-                                    }}
-                                    className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-primary/10 text-gray-700 hover:text-primary rounded-full transition-all duration-200"
+                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+                                    onClick={() => setSearchQuery("")}
+                                    aria-label="Clear search"
                                   >
-                                    {term}
+                                    <X className="h-5 w-5" />
                                   </button>
-                                ))}
+                                )}
+                              </div>
+
+                              <div className="mt-4">
+                                <h4 className="text-sm font-medium text-gray-500 mb-2">
+                                  Popular Searches
+                                </h4>
+                                <div className="flex flex-wrap gap-2">
+                                  {[
+                                    "Protein Powder",
+                                    "Gainer",
+                                    "Bcaa",
+                                    "Creatine",
+                                  ].map((term) => (
+                                    <button
+                                      key={term}
+                                      type="button"
+                                      onClick={() => {
+                                        setSearchQuery(term);
+                                        handleSearch({
+                                          preventDefault: () => { },
+                                        });
+                                      }}
+                                      className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-primary/10 text-gray-700 hover:text-primary rounded-full transition-all duration-200"
+                                    >
+                                      {term}
+                                    </button>
+                                  ))}
+                                </div>
                               </div>
                             </div>
-                          </div>
 
-                          <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-between">
-                            <button
-                              type="button"
-                              onClick={() => setIsSearchExpanded(false)}
-                              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 font-medium text-sm"
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              type="submit"
-                              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all duration-200 flex items-center gap-2 font-medium text-sm"
-                            >
-                              <Search className="h-4 w-4" />
-                              Search
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    </>
-                  ) : (
-                    <button
-                      onClick={() => setIsSearchExpanded(true)}
-                      className="p-2 text-gray-600 hover:text-primary transition-all duration-200 focus:outline-none hover:scale-110 hidden md:block"
-                      aria-label="Search"
-                    >
-                      <Search className="h-5 w-5" />
-                    </button>
-                  )}
-                </div>
+                            <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-between">
+                              <button
+                                type="button"
+                                onClick={() => setIsSearchExpanded(false)}
+                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 font-medium text-sm"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                type="submit"
+                                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all duration-200 flex items-center gap-2 font-medium text-sm"
+                              >
+                                <Search className="h-4 w-4" />
+                                Search
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => setIsSearchExpanded(true)}
+                        className="p-2 text-gray-600 hover:text-primary transition-all duration-200 focus:outline-none hover:scale-110 hidden md:block"
+                        aria-label="Search"
+                      >
+                        <Search className="h-5 w-5" />
+                      </button>
+                    )}
+                  </div>
+                )}
 
                 {/* Wishlist - Desktop Only */}
                 <Link
@@ -773,43 +758,45 @@ export function Navbar() {
         </ClientOnly>
       </header>
 
-      {/* Mobile Search Bar - Below Header */}
-      <div className="md:hidden sticky top-[102px] z-40 bg-white shadow-sm px-4 py-2">
-        <form onSubmit={handleSearch} className="relative">
-          <div className="relative flex items-center">
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-              <Search className="h-5 w-5" />
-            </div>
-            <Input
-              type="text"
-              placeholder={placeholders[placeholderIndex]}
-              className="w-full pl-11 pr-14 py-5 text-base bg-gray-50/80 border-gray-200 focus:border-primary focus:ring-primary rounded-xl placeholder:text-gray-400"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              autoComplete="off"
-            />
-            <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center space-x-1 pr-3">
-              {searchQuery && (
-                <button
-                  type="button"
-                  className="p-1.5 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
-                  onClick={() => setSearchQuery("")}
-                  aria-label="Clear search"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              )}
-              <button
-                type="submit"
-                className="p-1.5 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors"
-                aria-label="Search"
-              >
+      {/* Mobile Search Bar - Below Header (hide on home) */}
+      {pathname !== "/" && (
+        <div className="md:hidden sticky top-[102px] z-40 bg-white shadow-sm px-4 py-2">
+          <form onSubmit={handleSearch} className="relative">
+            <div className="relative flex items-center">
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                 <Search className="h-5 w-5" />
-              </button>
+              </div>
+              <Input
+                type="text"
+                placeholder={placeholders[placeholderIndex]}
+                className="w-full pl-11 pr-14 py-5 text-base bg-gray-50/80 border-gray-200 focus:border-primary focus:ring-primary rounded-xl placeholder:text-gray-400"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoComplete="off"
+              />
+              <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center space-x-1 pr-3">
+                {searchQuery && (
+                  <button
+                    type="button"
+                    className="p-1.5 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+                    onClick={() => setSearchQuery("")}
+                    aria-label="Clear search"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  className="p-1.5 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors"
+                  aria-label="Search"
+                >
+                  <Search className="h-5 w-5" />
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      )}
 
       {/* Mobile Bottom Navigation */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">

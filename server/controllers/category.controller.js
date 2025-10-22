@@ -19,7 +19,7 @@ export const getAllCategories = asyncHandler(async (req, res) => {
       },
     },
     orderBy: {
-      name: "asc",
+      createdBy: "asc",
     },
   });
 
@@ -163,8 +163,8 @@ export const getProductsByCategory = asyncHandler(async (req, res) => {
       basePrice:
         product.variants.length > 0
           ? Math.min(
-              ...product.variants.map((v) => parseFloat(v.salePrice || v.price))
-            )
+            ...product.variants.map((v) => parseFloat(v.salePrice || v.price))
+          )
           : null,
     };
   });

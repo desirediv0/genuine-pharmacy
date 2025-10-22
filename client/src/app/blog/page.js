@@ -12,7 +12,7 @@ import CategoryFilter from "./components/CategoryFilter";
 
 // Helper function to format image URLs correctly
 const getImageUrl = (image) => {
-  if (!image) return "/images/blog-placeholder.jpg";
+  if (!image) return "/images/blog-placeholder.png";
   if (image.startsWith("http")) return image;
   return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
 };

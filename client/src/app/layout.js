@@ -23,9 +23,8 @@ const poppinsFont = localFont({
 });
 
 export const metadata = {
-  title: "Genuine Pharmacy - Premium Supplements for Your Fitness Journey",
-  description:
-    "Get high-quality supplements at the best prices. Shop for ₹999+ and receive a scratch card with exciting rewards!.",
+  title: "Genuine Pharmacy - Buy Health Care Items and Essentials | Fast Delivery & Authentic Products",
+  description: "Shop trusted health care essentials at Genuine Pharmacy. Enjoy fast delivery and authentic products from a pharmacy you can trust.",
 };
 
 export default function RootLayout({ children }) {

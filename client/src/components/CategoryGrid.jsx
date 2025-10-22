@@ -30,7 +30,7 @@ const CategoryCard = ({ category, index }) => {
         ) : (
           <div className="relative w-full h-full  overflow-hidden bg-gray-50 flex items-center justify-center">
             <Image
-              src={category.image || "/placeholder.jpg"}
+              src={category.image || "/placeholder.png"}
               alt={category.name || "Category"}
               width={300}
               height={300}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { fetchApi, fetchProductsByType } from "@/lib/utils";
@@ -19,24 +19,7 @@ import CategoriesCarousel from "@/components/catgry";
 import Headtext from "@/components/ui/headtext";
 import { useRouter } from "next/navigation";
 import {
-  bg1,
   bg1sm,
-  bg2,
-  bg2sm,
-  bg3,
-  bg3sm,
-  bg4,
-  bg4sm,
-  bg5,
-  bg5sm,
-  bg6,
-  bg6sm,
-  bg7,
-  bg7sm,
-  bg8,
-  bg8sm,
-  bg9,
-  bg9sm,
   scratch,
 } from "@/assets";
 import SupplementStoreUI from "@/components/SupplementStoreUI";
@@ -45,194 +28,132 @@ import BrandCarousel from "@/components/BrandCarousel";
 import ProducCard from "@/components/ProducCard";
 
 const HeroCarousel = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [api, setApi] = useState(null);
-  const [autoplay, setAutoplay] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-
   const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const debounceRef = useRef(null);
 
-  const slides = [
-    {
-      ctaLink: "/category/protein",
-      img: bg1,
-      smimg: bg1sm,
-      title: "Protein Collection",
-      subtitle: "Build Muscle Faster",
-    },
-    {
-      ctaLink: "/category/protein",
-      img: bg2,
-      smimg: bg2sm,
-      title: "Protein Collection",
-      subtitle: "Build Muscle Faster",
-    },
-    {
-      ctaLink: "/category/protein",
-      img: bg3,
-      smimg: bg3sm,
-      title: "Protein Collection",
-      subtitle: "Build Muscle Faster",
-    },
-    {
-      ctaLink: "/category/protein",
-      img: bg4,
-      smimg: bg4sm,
-      title: "Protein Collection",
-      subtitle: "Build Muscle Faster",
-    },
-    {
-      ctaLink: "/category/protein",
-      img: bg5,
-      smimg: bg5sm,
-      title: "Protein Collection",
-      subtitle: "Build Muscle Faster",
-    },
-    {
-      ctaLink: "/category/protein",
-      img: bg6,
-      smimg: bg6sm,
-      title: "Protein Collection",
-      subtitle: "Build Muscle Faster",
-    },
-    {
-      ctaLink: "/category/protein",
-      img: bg7,
-      smimg: bg7sm,
-      title: "Protein Collection",
-      subtitle: "Build Muscle Faster",
-    },
-    {
-      ctaLink: "/category/protein",
-      img: bg8,
-      smimg: bg8sm,
-      title: "Protein Collection",
-      subtitle: "Build Muscle Faster",
-    },
-    {
-      ctaLink: "/category/protein",
-      img: bg9,
-      smimg: bg9sm,
-      title: "Protein Collection",
-      subtitle: "Build Muscle Faster",
-    },
-  ];
-
-  // Handle responsive detection
+  // Search products via public API (debounced)
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    if (!query || query.trim().length < 2) {
+      setSuggestions([]);
+      setLoading(false);
+      return;
+    }
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
+    setLoading(true);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetchApi(`/public/products?search=${encodeURIComponent(query)}&limit=6`);
+        setSuggestions(res?.data?.products || []);
+      } catch (err) {
+        console.error("Search error:", err);
+        setSuggestions([]);
+      } finally {
+        setLoading(false);
+      }
+    }, 350);
 
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+    return () => clearTimeout(debounceRef.current);
+  }, [query]);
 
-  // Handle autoplay functionality
-  useEffect(() => {
-    if (!api || !autoplay) return;
+  const handleSubmit = (e) => {
+    e?.preventDefault();
+    if (!query.trim()) return;
+    // Navigate to products page with search query
+    router.push(`/products?search=${encodeURIComponent(query.trim())}`);
+    setShowSuggestions(false);
+  };
 
-    const interval = setInterval(() => {
-      api.scrollNext();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [api, autoplay]);
-
-  // Update current slide index when carousel changes
-  useEffect(() => {
-    if (!api) return;
-
-    const onSelect = () => {
-      setCurrentSlide(api.selectedScrollSnap());
-    };
-
-    api.on("select", onSelect);
-    return () => {
-      api.off("select", onSelect);
-    };
-  }, [api]);
-
-  const handleSlideClick = (ctaLink) => {
-    router.push(ctaLink);
+  const handleSelect = (product) => {
+    router.push(`/products/${product.slug}`);
+    setShowSuggestions(false);
   };
 
   return (
-    <div className="relative w-full">
-      {/* Mobile: Smaller height, Desktop: Larger height */}
-      <div className="relative overflow-hidden">
-        <Carousel
-          setApi={setApi}
-          className="h-full w-full"
-          opts={{
-            loop: true,
-            align: "start",
-          }}
-        >
-          <CarouselContent className="h-full">
-            {slides.map((slide, index) => (
-              <CarouselItem key={index} className="h-full p-0">
-                <div
-                  className="relative h-[180px] sm:h-[250px] md:h-[350px] w-full cursor-pointer group overflow-hidden"
-                  onClick={() => handleSlideClick(slide.ctaLink)}
-                >
-                  {/* Background Image */}
-                  <Image
-                    src={isMobile ? slide.smimg : slide.img}
-                    alt={slide.title || "Hero banner"}
-                    fill
-                    className="object-cover md:object-fill transition-transform duration-700"
-                    priority={index === 0}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+    <header
+      className="w-full text-white"
+      style={{ background: "linear-gradient(90deg,#09396A 0%, #09396A 30%, #E65F1C 100%)" }}
+    >
+      <div className="container mx-auto px-4 py-6 lg:py-2">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Left promo image */}
+          <div className="hidden lg:flex md:items-center md:justify-start md:w-64">
+            <div className="w-64 h-64  overflow-hidden ">
+              <Image src={"/1st.png"} alt="promo-left" width={300} height={300} className="object-cover" />
+            </div>
+          </div>
+
+          {/* Title and subtitle */}
+          <div className="grid grid-cols-1 gap-4">
+            <div className="flex-1 md:flex-none text-center md:text-left">
+              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">Buy Health Care Items and Essentials</h1>
+              <p className="text-sm md:text-base text-white/80 mt-2">Fast delivery • Authentic products • Trusted pharmacy</p>
+            </div>
+
+            {/* Center: prominent Search pill */}
+            <div className="w-full md:flex-1 max-w-4xl">
+              <form onSubmit={handleSubmit} className="relative">
+                <label htmlFor="hero-search" className="sr-only">Search Medicines</label>
+                <div className="flex items-center bg-white rounded shadow px-3 py-2  text-gray-700">
+                  <svg className="w-6 h-6 text-gray-400 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 21l-4.35-4.35"></path><circle cx="11" cy="11" r="6"></circle></svg>
+                  <input
+                    id="hero-search"
+                    type="search"
+                    value={query}
+                    onChange={(e) => { setQuery(e.target.value); setShowSuggestions(true); }}
+                    placeholder="Search Medicines"
+                    className="w-full bg-transparent outline-none text-gray-900 placeholder-gray-500 text-base md:text-lg"
+                    onFocus={() => setShowSuggestions(true)}
                   />
+                  <button type="submit" className="ml-4 inline-flex items-center px-6 py-2 rounded bg-[#E65F1C] text-white text-sm md:text-base shadow-md">Search</button>
                 </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
 
-          {/* Navigation Controls - Better positioned and sized */}
-          <CarouselPrevious className="absolute left-2 sm:left-4 top-1/2 hidden md:flex -translate-y-1/2 h-4 w-4 sm:h-10 sm:w-10 md:h-12 md:w-12 z-30 bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-sm" />
-          <CarouselNext className="absolute right-2 sm:right-4 top-1/2 hidden md:flex -translate-y-1/2 h-4 w-4 sm:h-10 sm:w-10 md:h-12 md:w-12 z-30 bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-sm" />
-
-          {/* Dot Indicators - Better responsive sizing */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex space-x-2">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => api?.scrollTo(index)}
-                className={`w-2 h-2  rounded-full transition-all duration-300 ${index === currentSlide
-                  ? "bg-white scale-125 shadow-lg"
-                  : "bg-white/50 hover:bg-white/70"
-                  }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
+                {/* Suggestions dropdown */}
+                {showSuggestions && (suggestions.length > 0 || loading) && (
+                  <div className="absolute left-0 right-0 mt-3 bg-white rounded shadow z-50 overflow-hidden text-gray-800">
+                    {loading ? (
+                      <div className="p-3 text-sm">Loading...</div>
+                    ) : (
+                      suggestions.map((p) => (
+                        <button
+                          key={p.id}
+                          onClick={() => handleSelect(p)}
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-left"
+                        >
+                          <div className="w-14 h-14 relative flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
+                            {p.image ? (
+                              <Image src={p.image} alt={p.name} fill className="object-cover" />
+                            ) : (
+                              <div className="w-full h-full bg-gray-200" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-medium text-sm md:text-base">{p.name}</div>
+                            <div className="text-xs text-gray-500">{p.category?.name || ""}</div>
+                          </div>
+                          <div className="text-sm text-gray-600">{p.basePrice ? `₹${p.basePrice}` : ""}</div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
+              </form>
+            </div>
           </div>
 
-          {/* Autoplay Toggle - Better positioned */}
-          <div className="absolute top-4 right-4 z-30  hidden md:flex">
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-5 w-5  bg-white/10 hover:bg-white/20 border-white/20 text-white backdrop-blur-sm"
-              onClick={() => setAutoplay(!autoplay)}
-              aria-label={autoplay ? "Pause slideshow" : "Play slideshow"}
-            >
-              {autoplay ? (
-                <div className="w-2 h-2 flex space-x-0.5">
-                  <div className="w-1 h-full bg-current"></div>
-                  <div className="w-1 h-full bg-current"></div>
-                </div>
-              ) : (
-                <div className="w-0 h-0 border-t-[4px] sm:border-t-[6px] border-t-transparent border-b-[4px] sm:border-b-[6px] border-b-transparent border-l-[6px] sm:border-l-[8px] border-l-current ml-0.5"></div>
-              )}
-            </Button>
+          {/* Right promo image */}
+          <div className="hidden lg:flex md:items-center md:justify-end md:w-64">
+            <div className="w-64 h-64  overflow-hidden ">
+              <Image src={"/2nd.png"} alt="promo-right" width={300} height={300} className="object-cover" />
+            </div>
           </div>
-        </Carousel>
+        </div>
       </div>
-    </div>
+    </header>
   );
 };
 
@@ -803,9 +724,9 @@ export default function Home() {
 
   return (
     <div>
-      <CategoriesCarousel />
       <HeroCarousel />
-      <AnnouncementBanner />
+      <CategoriesCarousel />
+      {/* <AnnouncementBanner /> */}
 
       {/* Brand Carousels */}
       <BrandCarousel tag="TOP" title="TOP BRANDS" />

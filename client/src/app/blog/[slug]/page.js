@@ -27,7 +27,7 @@ export async function generateMetadata({ params }) {
         description: post.metaDescription || post.summary || post.content,
         images: post.coverImageUrl
           ? [post.coverImageUrl]
-          : ["/images/blog-placeholder.jpg"],
+          : ["/images/blog-placeholder.png"],
         type: "article",
       },
     };

@@ -13,7 +13,7 @@ import { useAddProductToCart } from "@/lib/cart-utils";
 
 // Helper function to format image URLs correctly
 const getImageUrl = (image) => {
-  if (!image) return "/placeholder.jpg";
+  if (!image) return "/placeholder.png";
   if (image.startsWith("http")) return image;
   return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
 };
@@ -160,7 +160,7 @@ const ProducCard = ({ product }) => {
                   return getImageUrl(selectedVariant.images[0].url);
               }
               if (product.image) return getImageUrl(product.image);
-              return "/placeholder.jpg";
+              return "/placeholder.png";
             })()}
             alt={product.name}
             fill
