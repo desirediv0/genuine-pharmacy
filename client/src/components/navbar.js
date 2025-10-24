@@ -301,7 +301,7 @@ export function Navbar() {
             <div className="mt-8 pt-6 border-t">
               <div className="flex items-center gap-3 mb-4">
                 <Mail className="h-5 w-5 text-primary" />
-                <span className="font-medium">connect.genuinepharmacy@gmail.com</span>
+                <span className="font-medium">connect@genuinenutrition.com</span>
               </div>
             </div>
           </div>
@@ -321,7 +321,7 @@ export function Navbar() {
               {/* Left - Phone number */}
               <div className="hidden md:flex items-center text-xs">
                 <Mail className="h-3.5 w-3.5 mr-1.5" />
-                <span>connect.genuinepharmacy@gmail.com</span>
+                <span>connect@genuinenutrition.com</span>
               </div>
 
               {/* Center - Free shipping text */}

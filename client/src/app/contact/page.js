@@ -200,7 +200,7 @@ export default function ContactPage() {
                     <div>
                       <p className="font-medium">Email</p>
                       <p className="text-gray-600">
-                        {"connect.genuinepharmacy@gmail.com"}
+                        {"connect@genuinenutrition.com"}
                       </p>
                     </div>
                   </div>
