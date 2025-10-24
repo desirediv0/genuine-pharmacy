@@ -867,14 +867,16 @@ export function Navbar() {
             <span className="text-xs mt-1">Cart</span>
           </Link>
 
-          <Link
-            href="/wishlist"
-            className={`flex flex-col items-center justify-center py-2 px-1 ${pathname === "/wishlist" ? "text-primary" : "text-gray-600"
-              }`}
+          <a
+            href="https://genuinenutrition.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex items-center justify-center p-2 bg-orange-500 rounded-l-md overflow-hidden h-12 my-auto`}
           >
-            <Heart className="h-6 w-6" />
-            <span className="text-xs mt-1">Wishlist</span>
-          </Link>
+            <Image src="/logo-white.png" alt="Genuine Nutrition" width={200} height={200}
+              className="object-contain h-full w-full"
+            />
+          </a>
         </div>
       </div>
     </>
