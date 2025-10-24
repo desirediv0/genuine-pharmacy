@@ -172,7 +172,7 @@ export function Navbar() {
               onClick={() => setIsMenuOpen(false)}
             >
               <Image
-                src="/logo.png"
+                src="/pharmacy.png"
                 alt="Logo"
                 width={150}
                 height={150}
@@ -372,10 +372,10 @@ export function Navbar() {
               {/* Logo */}
               <Link href="/" className="flex items-center p-2">
                 <Image
-                  src="/logo.png"
+                  src="/pharmacy.png"
                   alt="Logo"
-                  width={150}
-                  height={150}
+                  width={140}
+                  height={140}
                   className="ml-2 p-2 lg:p-0"
                 />
               </Link>

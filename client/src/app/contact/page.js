@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 import {
-  Phone,
   Mail,
   MapPin,
   Facebook,
@@ -240,25 +239,6 @@ export default function ContactPage() {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Map */}
-          <div className="mt-12">
-            <div className="bg-gray-50 rounded-lg overflow-hidden h-[400px] mb-4">
-              <iframe
-                src={`https://maps.google.com/maps?q=${28.4423},${77.0493}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-                title="GenuinePharmacy Location"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
-            <p className="text-center text-gray-600">
-              Visit our store at {"89/2 Sector 39, Gurugram, Haryana"}
-            </p>
           </div>
         </div>
       </div>

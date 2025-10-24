@@ -67,7 +67,7 @@ export function Footer() {
               <div className="mb-6">
                 <Link href="/" className="flex items-center">
                   <Image
-                    src="/logo-white.png"
+                    src="/white-logo.png"
                     alt="Logo"
                     width={150}
                     height={150}
