@@ -177,7 +177,7 @@ export function Footer() {
       <div className="bg-[#15395F] py-4 pb-20 md:pb-4">
         <div className="container mx-auto px-4">
           <p className="text-white/70 text-center text-sm">
-            © {new Date().getFullYear()} GenuinePharmacy. All rights reserved.
+            © {new Date().getFullYear()} Genuine Pharmacy. All rights reserved.
           </p>
         </div>
       </div>

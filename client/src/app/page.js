@@ -270,55 +270,57 @@ const FeaturedProducts = ({
 
 // Testimonials Section
 const TestimonialsSection = () => {
-  // Expanded testimonials data (6 entries, no images, initials only)
   const testimonials = [
     {
-      name: "Yatharth S.",
-      role: "Bodybuilding Gold Medalist",
+      name: "Riya Mehta",
+      role: "Verified Buyer",
       quote:
-        "Genuine Pharmacy products are always authentic and delivery is super quick. Highly recommended!",
+        "Genuine Pharmacy always delivers authentic supplements. The packaging is secure and delivery is super fast!",
       rating: 5,
       verified: true,
     },
     {
-      name: "Pratik G.",
-      role: "Rowing Athlete",
+      name: "Arjun Patel",
+      role: "Regular Customer",
       quote:
-        "Been a customer for 2 years. Never disappointed with quality or service.",
-      rating: 4.5,
-      verified: true,
-    },
-    {
-      name: "Monika L.",
-      role: "Fitness Influencer",
-      quote:
-        "Shipping is fast and the supplements are genuine. Trustworthy site!",
+        "I’ve ordered from Genuine Pharmacy several times — never faced any issue with product quality or delivery.",
       rating: 5,
       verified: true,
     },
     {
-      name: "Amit K.",
-      role: "Gym Trainer",
+      name: "Neha Sharma",
+      role: "Fitness Enthusiast",
       quote:
-        "My clients and I both use Genuine Pharmacy. Great results every time.",
+        "Totally trust Genuine Pharmacy for all my health supplements. They always send genuine and fresh products.",
       rating: 5,
       verified: true,
     },
     {
-      name: "Sneha P.",
-      role: "Yoga Coach",
-      quote: "Clean ingredients and good offers. I always buy from here.",
-      rating: 4,
+      name: "Manish Verma",
+      role: "Certified Trainer",
+      quote:
+        "I recommend Genuine Pharmacy to all my clients. Reliable source for authentic fitness products.",
+      rating: 5,
       verified: true,
     },
     {
-      name: "Rohit S.",
-      role: "Sports Nutritionist",
-      quote: "Customer support is helpful and products are top-notch.",
+      name: "Snehal Desai",
+      role: "Wellness Coach",
+      quote:
+        "Love the clean packaging and fast service. Offers are great and products are always genuine.",
+      rating: 5,
+      verified: true,
+    },
+    {
+      name: "Rahul Nair",
+      role: "Health Consultant",
+      quote:
+        "Customer service is excellent and product range is wide. Genuine Pharmacy is my go-to for supplements.",
       rating: 5,
       verified: true,
     },
   ];
+
 
   // Carousel logic
   const [api, setApi] = useState(null);
