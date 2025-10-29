@@ -19,8 +19,7 @@ import CategoriesCarousel from "@/components/catgry";
 import Headtext from "@/components/ui/headtext";
 import { useRouter } from "next/navigation";
 import {
-  bg1sm,
-  scratch,
+  scratch
 } from "@/assets";
 import SupplementStoreUI from "@/components/SupplementStoreUI";
 import CategoryGrid from "@/components/CategoryGrid";
@@ -81,7 +80,7 @@ const HeroCarousel = () => {
       <div className="container mx-auto px-4 py-6 lg:py-2">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Left promo image */}
-          <div className="hidden lg:flex md:items-center md:justify-start md:w-64">
+          <div className="flex md:items-center md:justify-start md:w-64">
             <div className="w-64 h-64  overflow-hidden ">
               <Image src={"/1st.png"} alt="promo-left" width={300} height={300} className="object-cover" />
             </div>
