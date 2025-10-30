@@ -760,7 +760,7 @@ export function ProductForm({
         }
 
         // Append each image file with proper field name for multer
-        imageFiles.forEach((file, index) => {
+        imageFiles.forEach((file) => {
           formData.append("images", file);
 
         });
