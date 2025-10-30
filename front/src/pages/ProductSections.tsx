@@ -137,8 +137,12 @@ export default function ProductSectionsPage() {
 
             const sectionResults = await Promise.all(sectionPromises);
             const productsBySectionMap: Record<string, Product[]> = {};
-            sectionResults.forEach(({ section, products }) => {
-                productsBySectionMap[section] = products;
+            sectionResults.forEach(({ section, products: sectionProducts }) => {
+                // Map products with proper data structure
+                productsBySectionMap[section] = sectionProducts.map((p: any) => ({
+                    ...p,
+                    category: p.primaryCategory || (p.categories && p.categories.length > 0 ? p.categories[0] : null),
+                }));
             });
 
             // Fetch all products
@@ -149,9 +153,14 @@ export default function ProductSectionsPage() {
             });
 
             if (allResponse.data.success) {
+                const mappedProducts = (allResponse.data.data.products || []).map((p: any) => ({
+                    ...p,
+                    category: p.primaryCategory || (p.categories && p.categories.length > 0 ? p.categories[0] : null),
+                }));
+
                 setProductsBySection(productsBySectionMap);
-                setAllProducts(allResponse.data.data.products || []);
-                setFilteredProducts(allResponse.data.data.products || []);
+                setAllProducts(mappedProducts);
+                setFilteredProducts(mappedProducts);
             } else {
                 setError("Failed to fetch products");
             }
@@ -245,6 +254,23 @@ export default function ProductSectionsPage() {
         return null;
     };
 
+    const getProductPrice = (product: Product) => {
+        // Check if product has basePrice (from API response)
+        if (product.basePrice) return product.basePrice;
+
+        // Check variants for price
+        if (product.variants && product.variants.length > 0) {
+            const activeVariant = product.variants.find((v: any) => v.isActive);
+            if (activeVariant) {
+                return activeVariant.salePrice || activeVariant.price;
+            }
+            // Return first variant price if no active variant
+            return product.variants[0].salePrice || product.variants[0].price;
+        }
+
+        return null;
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
@@ -326,24 +352,31 @@ export default function ProductSectionsPage() {
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                                             {currentSectionProducts.map((product) => (
-                                                <Card key={product.id} className="overflow-hidden">
-                                                    <div className="aspect-square relative bg-muted">
+                                                <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                                                    <div className="aspect-square relative bg-gradient-to-br from-gray-100 to-gray-50">
                                                         {getProductImage(product) ? (
                                                             <img
                                                                 src={getProductImage(product)!}
                                                                 alt={product.name}
-                                                                className="object-cover w-full h-full"
+                                                                className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
                                                             />
                                                         ) : (
                                                             <div className="flex items-center justify-center h-full">
                                                                 <Package className="h-12 w-12 text-muted-foreground" />
                                                             </div>
                                                         )}
+                                                        {!product.isActive && (
+                                                            <div className="absolute top-2 right-2">
+                                                                <Badge variant="secondary" className="text-xs">
+                                                                    Inactive
+                                                                </Badge>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                    <CardContent className="p-4">
-                                                        <h3 className="font-semibold text-sm mb-1 line-clamp-2">
+                                                    <CardContent className="p-3">
+                                                        <h3 className="font-semibold text-sm mb-1 line-clamp-2 min-h-[2.5rem]">
                                                             {product.name}
                                                         </h3>
                                                         {product.category && (
@@ -351,15 +384,24 @@ export default function ProductSectionsPage() {
                                                                 {product.category.name}
                                                             </p>
                                                         )}
-                                                        {product.basePrice && (
-                                                            <p className="text-sm font-bold text-primary mb-3">
-                                                                ₹{product.basePrice}
-                                                            </p>
-                                                        )}
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            {getProductPrice(product) ? (
+                                                                <p className="text-sm font-bold text-primary">
+                                                                    ₹{getProductPrice(product)}
+                                                                </p>
+                                                            ) : (
+                                                                <p className="text-xs text-muted-foreground">No price</p>
+                                                            )}
+                                                            {product.variants && product.variants.length > 0 && (
+                                                                <Badge variant="outline" className="text-xs">
+                                                                    {product.variants.length} variant{product.variants.length > 1 ? 's' : ''}
+                                                                </Badge>
+                                                            )}
+                                                        </div>
                                                         <Button
                                                             size="sm"
                                                             variant="outline"
-                                                            className="w-full"
+                                                            className="w-full hover:bg-destructive hover:text-destructive-foreground"
                                                             onClick={() =>
                                                                 toggleProductSection(product.id, section.key, false)
                                                             }
@@ -368,7 +410,7 @@ export default function ProductSectionsPage() {
                                                             {updateLoading === product.id ? (
                                                                 <Loader2 className="h-4 w-4 animate-spin" />
                                                             ) : (
-                                                                "Remove"
+                                                                "Remove from Section"
                                                             )}
                                                         </Button>
                                                     </CardContent>
@@ -452,7 +494,7 @@ export default function ProductSectionsPage() {
                                                                 {product.category?.name || "Uncategorized"}
                                                             </TableCell>
                                                             <TableCell>
-                                                                {product.basePrice ? `₹${product.basePrice}` : "N/A"}
+                                                                {getProductPrice(product) ? `₹${getProductPrice(product)}` : "N/A"}
                                                             </TableCell>
                                                             <TableCell>
                                                                 <Badge
