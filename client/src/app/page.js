@@ -663,6 +663,19 @@ export default function Home() {
   const [bestsellerProducts, setBestsellerProducts] = useState([]);
   const [trendingProducts, setTrendingProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
+  const [skincareProducts, setSkincareProducts] = useState([]);
+  const [vitaminsProducts, setVitaminsProducts] = useState([]);
+  const [wellnessProducts, setWellnessProducts] = useState([]);
+  const [exploreProducts, setExploreProducts] = useState([]);
+  const [dealsProducts, setDealsProducts] = useState([]);
+  const [dermacareProducts, setDermacareProducts] = useState([]);
+  const [snacksProducts, setSnacksProducts] = useState([]);
+  const [environmentProducts, setEnvironmentProducts] = useState([]);
+  const [protinexProducts, setProtinexProducts] = useState([]);
+  const [personalProducts, setPersonalProducts] = useState([]);
+  const [travelProducts, setTravelProducts] = useState([]);
+  const [drinksProducts, setDrinksProducts] = useState([]);
+  const [genuineProducts, setGenuineProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -672,15 +685,46 @@ export default function Home() {
       try {
         setProductsLoading(true);
 
-        // Fetch products by different types
-        const [featuredRes, latestRes, bestsellerRes, trendingRes, newRes] =
-          await Promise.allSettled([
-            fetchProductsByType("featured", 8),
-            fetchProductsByType("latest", 8),
-            fetchProductsByType("bestseller", 8),
-            fetchProductsByType("trending", 8),
-            fetchProductsByType("new", 8),
-          ]);
+        // Fetch products by different types - limit to 15 per section
+        const [
+          featuredRes,
+          latestRes,
+          bestsellerRes,
+          trendingRes,
+          newRes,
+          skincareRes,
+          vitaminsRes,
+          wellnessRes,
+          exploreRes,
+          dealsRes,
+          dermacareRes,
+          snacksRes,
+          environmentRes,
+          protinexRes,
+          personalRes,
+          travelRes,
+          drinksRes,
+          genuineRes,
+        ] = await Promise.allSettled([
+          fetchProductsByType("featured", 15),
+          fetchProductsByType("latest", 15),
+          fetchProductsByType("bestseller", 15),
+          fetchProductsByType("trending", 15),
+          fetchProductsByType("new", 15),
+          fetchProductsByType("skincare", 15),
+          fetchProductsByType("vitamins", 15),
+          fetchProductsByType("wellness", 15),
+          fetchProductsByType("explore", 15),
+          fetchProductsByType("deals", 15),
+          fetchProductsByType("dermacare", 15),
+          fetchProductsByType("snacks", 15),
+          fetchProductsByType("environment", 15),
+          fetchProductsByType("protinex", 15),
+          fetchProductsByType("personal", 15),
+          fetchProductsByType("travel", 15),
+          fetchProductsByType("drinks", 15),
+          fetchProductsByType("genuine", 15),
+        ]);
 
         // Set featured products (fallback to regular featured if type doesn't exist)
         if (featuredRes.status === "fulfilled") {
@@ -688,7 +732,7 @@ export default function Home() {
         } else {
           // Fallback to regular featured products
           const fallbackRes = await fetchApi(
-            "/public/products?featured=true&limit=8"
+            "/public/products?featured=true&limit=15"
           );
           setFeaturedProducts(fallbackRes?.data?.products || []);
         }
@@ -711,6 +755,71 @@ export default function Home() {
         // Set new products
         if (newRes.status === "fulfilled") {
           setNewProducts(newRes.value?.data?.products || []);
+        }
+
+        // Set skincare products
+        if (skincareRes.status === "fulfilled") {
+          setSkincareProducts(skincareRes.value?.data?.products || []);
+        }
+
+        // Set vitamins products
+        if (vitaminsRes.status === "fulfilled") {
+          setVitaminsProducts(vitaminsRes.value?.data?.products || []);
+        }
+
+        // Set wellness products
+        if (wellnessRes.status === "fulfilled") {
+          setWellnessProducts(wellnessRes.value?.data?.products || []);
+        }
+
+        // Set explore products
+        if (exploreRes.status === "fulfilled") {
+          setExploreProducts(exploreRes.value?.data?.products || []);
+        }
+
+        // Set deals products
+        if (dealsRes.status === "fulfilled") {
+          setDealsProducts(dealsRes.value?.data?.products || []);
+        }
+
+        // Set dermacare products
+        if (dermacareRes.status === "fulfilled") {
+          setDermacareProducts(dermacareRes.value?.data?.products || []);
+        }
+
+        // Set snacks products
+        if (snacksRes.status === "fulfilled") {
+          setSnacksProducts(snacksRes.value?.data?.products || []);
+        }
+
+        // Set environment products
+        if (environmentRes.status === "fulfilled") {
+          setEnvironmentProducts(environmentRes.value?.data?.products || []);
+        }
+
+        // Set protinex products
+        if (protinexRes.status === "fulfilled") {
+          setProtinexProducts(protinexRes.value?.data?.products || []);
+        }
+
+        // Set personal products
+        if (personalRes.status === "fulfilled") {
+          setPersonalProducts(personalRes.value?.data?.products || []);
+        }
+
+        // Set travel products
+        if (travelRes.status === "fulfilled") {
+          setTravelProducts(travelRes.value?.data?.products || []);
+        }
+
+        // Set drinks products
+        if (drinksRes.status === "fulfilled") {
+          setDrinksProducts(drinksRes.value?.data?.products || []);
+        }
+
+        // Set genuine products
+        if (genuineRes.status === "fulfilled") {
+          setGenuineProducts(genuineRes.value?.data?.products || []);
         }
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -840,7 +949,268 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* Top Skin Care Products Section */}
+      {skincareProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="TOP SKIN CARE PRODUCTS" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Premium skincare solutions for healthy and glowing skin
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={skincareProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Vitamins & Supplements Section */}
+      {vitaminsProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="VITAMINS & SUPPLEMENTS" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Essential vitamins and supplements for your daily health
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={vitaminsProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Explore Something New Section */}
+      {exploreProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="EXPLORE SOMETHING NEW" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Discover innovative products for your wellness journey
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={exploreProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
       <BrandCarousel tag="HOT" title="HOT BRANDS" />
+
+      {/* Sexual Wellness Section */}
+      {wellnessProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="SEXUAL WELLNESS" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Trusted products for intimate health and wellness
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={wellnessProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Deals of the Day Section */}
+      {dealsProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="DEALS OF THE DAY" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Amazing offers and discounts on selected products
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={dealsProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Derma Care Section */}
+      {dermacareProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="DERMA CARE" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Dermatologically tested products for skin health
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={dermacareProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Healthy Snacks Section */}
+      {snacksProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="HEALTHY SNACKS" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Nutritious and delicious snacks for a healthy lifestyle
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={snacksProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Clean Environment Essentials Section */}
+      {environmentProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="CLEAN ENVIRONMENT ESSENTIALS" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Eco-friendly products for a cleaner, healthier environment
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={environmentProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Protinex Top Sellers Section */}
+      {protinexProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="PROTINEX TOP SELLERS" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Best-selling Protinex products for complete nutrition
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={protinexProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Personal Care Section */}
+      {personalProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="PERSONAL CARE" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Quality personal care products for your daily routine
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={personalProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Trusted Travel Essentials Section */}
+      {travelProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="TRUSTED TRAVEL ESSENTIALS" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Essential health products for your travel needs
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={travelProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Nutritional Drinks Section */}
+      {drinksProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="NUTRITIONAL DRINKS" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Power-packed nutritional drinks for energy and health
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={drinksProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Genuine Health Products Section */}
+      {genuineProducts.length > 0 && (
+        <section className="py-5 md:py-6 my-3 md:my-4 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <Headtext text="GENUINE HEALTH PRODUCTS" />
+              <p className="text-gray-600 mt-6 max-w-2xl mx-auto">
+                Authentic and certified health products you can trust
+              </p>
+            </div>
+
+            <FeaturedProducts
+              products={genuineProducts}
+              isLoading={productsLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      )}
 
       <Image
         src={scratch}

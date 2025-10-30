@@ -8,17 +8,18 @@ import s3client from "../utils/s3client.js";
 const storage = multer.memoryStorage();
 export const uploadFiles = multer({
   storage,
-  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit for PDFs and audio
+  limits: {
+    fileSize: 50 * 1024 * 1024,
+    files: 50,
+    fieldSize: 50 * 1024 * 1024,
+    fieldNameSize: 1000,
+    fields: 1000,
+  },
 });
 
 // Function to process and upload image
 export const processAndUploadImage = async (file, subfolder = "images") => {
   try {
-    console.log(`🔧 Processing image: ${file.originalname}`);
-    console.log(
-      `🔧 File buffer size: ${file.buffer?.length || "undefined"} bytes`
-    );
-
     const { originalname, buffer } = file;
 
     if (!buffer) {
@@ -36,32 +37,24 @@ export const processAndUploadImage = async (file, subfolder = "images") => {
     const uploadFolder = process.env.UPLOAD_FOLDER || "ecom-uploads";
     const filename = `${uploadFolder}/${subfolder}/${timestamp}-${sanitizedName}`;
 
-    console.log(`🔧 Target filename: ${filename}`);
-
     // Process image with sharp to optimize
     console.log(`🔧 Starting Sharp processing...`);
     const processedBuffer = await sharp(buffer)
       .resize(1200, null, { withoutEnlargement: true })
       .toBuffer();
 
-    console.log(
-      `🔧 Sharp processing complete. Processed size: ${processedBuffer.length} bytes`
-    );
 
-    // Upload to S3 with proper content type
-    console.log(`🔧 Starting S3 upload...`);
     const putCommand = new PutObjectCommand({
       Bucket: process.env.SPACES_BUCKET,
       Key: filename,
       Body: processedBuffer,
       ACL: "public-read",
-      ContentType: `image/${
-        fileExtension === "png"
-          ? "png"
-          : fileExtension === "gif"
+      ContentType: `image/${fileExtension === "png"
+        ? "png"
+        : fileExtension === "gif"
           ? "gif"
           : "jpeg"
-      }`,
+        }`,
     });
 
     await s3client.send(putCommand);
@@ -114,7 +107,7 @@ export const uploadAudio = async (file) => {
   const { originalname, buffer, mimetype } = file;
 
   // Use UPLOAD_FOLDER from environment variables
-  const uploadFolder = process.env.UPLOAD_FOLDER || "ecom-uploads";
+  const uploadFolder = process.env.UPLOAD_FOLDER || "pharmacy";
   const filename = `${uploadFolder}/audio/${Date.now()}-${originalname
     .toLowerCase()
     .split(" ")

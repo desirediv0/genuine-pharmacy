@@ -175,10 +175,20 @@ export default function DashboardLayout() {
                   Action.READ
                 )}
               />
-              <NavItem
+              {/* <NavItem
                 href="/featured-products"
                 icon={<Star className="h-5 w-5" />}
                 title="Featured"
+                hasPermission={hasPermissionFor(
+                  admin,
+                  Resource.PRODUCTS,
+                  Action.UPDATE
+                )}
+              /> */}
+              <NavItem
+                href="/product-sections"
+                icon={<Star className="h-5 w-5" />}
+                title="Product Sections"
                 hasPermission={hasPermissionFor(
                   admin,
                   Resource.PRODUCTS,
@@ -401,10 +411,21 @@ export default function DashboardLayout() {
                   Action.READ
                 )}
               />
-              <NavItem
+              {/* <NavItem
                 href="/featured-products"
                 icon={<Star className="h-5 w-5" />}
                 title="Featured"
+                onClick={toggleMobileMenu}
+                hasPermission={hasPermissionFor(
+                  admin,
+                  Resource.PRODUCTS,
+                  Action.UPDATE
+                )}
+              /> */}
+              <NavItem
+                href="/product-sections"
+                icon={<Star className="h-5 w-5" />}
+                title="Product Sections"
                 onClick={toggleMobileMenu}
                 hasPermission={hasPermissionFor(
                   admin,

@@ -29,9 +29,9 @@ import adminBrandRoutes from "./routes/admin.brand.routes.js";
 const app = express();
 
 // Security & Parse Middlewares
-app.use(express.json());
-
-app.use(express.urlencoded({ extended: false }));
+// Increase limits for handling large product data with multiple images and descriptions
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb', parameterLimit: 100000 }));
 app.use(cookieParser());
 
 // CORS Configuration

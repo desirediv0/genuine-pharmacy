@@ -744,10 +744,7 @@ export function ProductForm({
 
       // Add images (only for non-variant products)
       if (!hasVariants && imageFiles.length > 0) {
-        console.log(
-          `📸 Submitting ${imageFiles.length} images for simple product:`,
-          imageFiles
-        );
+
 
         // Add primary image index
         const primaryIndex = imagePreviews.findIndex(
@@ -755,7 +752,7 @@ export function ProductForm({
         );
         if (primaryIndex >= 0) {
           formData.append("primaryImageIndex", String(primaryIndex));
-          console.log(`📸 Primary image index: ${primaryIndex}`);
+
         } else {
           // Default to first image as primary if none is marked
           formData.append("primaryImageIndex", "0");
@@ -765,16 +762,9 @@ export function ProductForm({
         // Append each image file with proper field name for multer
         imageFiles.forEach((file, index) => {
           formData.append("images", file);
-          console.log(
-            `📸 Added image ${index + 1}: ${file.name} (${file.size} bytes)`
-          );
+
         });
 
-        // Also log the FormData contents
-        console.log(
-          `📸 FormData contents:`,
-          Object.fromEntries(formData.entries())
-        );
       } else if (hasVariants) {
         console.log(
           `📸 Skipping product images for variant product - will use variant-specific images`
@@ -801,11 +791,9 @@ export function ProductForm({
         // If product creation/update was successful and we have variant images, upload them
         if (hasVariants && response.data.data?.product?.variants) {
           const productVariants = response.data.data.product.variants;
-          console.log(
-            `📸 Processing variant images for ${productVariants.length} variants`
-          );
 
-          let uploadPromises = [];
+
+          const uploadPromises = [];
 
           // Match variants by their temporary IDs or flavor/weight combination
           for (let i = 0; i < variants.length; i++) {
@@ -858,11 +846,7 @@ export function ProductForm({
                   const isPrimary =
                     imageData.isPrimary === true ? true : undefined;
 
-                  console.log(`📸 Upload decision for image ${j + 1}:`, {
-                    imageDataIsPrimary: imageData.isPrimary,
-                    finalIsPrimary: isPrimary,
-                    note: "undefined = let backend decide, true = force primary",
-                  });
+
 
                   const uploadPromise = products
                     .uploadVariantImage(
@@ -1084,27 +1068,6 @@ export function ProductForm({
     categories,
   ]);
 
-  // ... inside ProductForm, after brands state:
-  // const [brands, setBrands] = useState<{ label: string; value: string }[]>([]); // Removed unused brands state
-
-  // useEffect(() => {
-  //   async function fetchBrands() {
-  //     try {
-  //       const res = await import("@/api/adminService").then((m) =>
-  //         m.brands.getBrands()
-  //       );
-  //       const brandOptions = (res.data.data.brands || []).map((b: any) => ({
-  //         label: b.name,
-  //         value: b.id,
-  //       }));
-  //       setBrands(brandOptions);
-  //     } catch (e) {
-  //       // ignore
-  //     }
-  //   }
-  //   fetchBrands();
-  // }, []);
-
   if (formLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center py-10">
@@ -1252,32 +1215,6 @@ export function ProductForm({
                 <h3 className="text-lg font-semibold">Product Settings</h3>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  {/* <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="isSupplement"
-                      name="isSupplement"
-                      checked={product.isSupplement}
-                      onCheckedChange={(checked) =>
-                        setProduct((prev) => ({
-                          ...prev,
-                          isSupplement: !!checked,
-                        }))
-                      }
-                    />
-                    <Label htmlFor="isSupplement">Is Supplement</Label>
-                  </div> */}
-
-                  {/* <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="featured"
-                      name="featured"
-                      checked={product.featured}
-                      onCheckedChange={(checked) =>
-                        setProduct((prev) => ({ ...prev, featured: !!checked }))
-                      }
-                    />
-                    <Label htmlFor="featured">Featured Product</Label>
-                  </div> */}
 
                   <div className="flex items-center gap-2">
                     <Checkbox
@@ -1311,16 +1248,30 @@ export function ProductForm({
 
                 {/* Product Type Selection */}
                 <div className="space-y-2">
-                  <Label>Product Categories</Label>
+                  <Label>Product Sections</Label>
                   <p className="text-xs text-muted-foreground">
-                    Select which categories this product belongs to
+                    Select which sections this product should appear in on the homepage (Max 15 products per section)
                   </p>
-                  <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {[
-                      { key: "featured", label: "Featured", icon: "⭐" },
-                      { key: "bestseller", label: "Bestseller", icon: "📈" },
-                      { key: "trending", label: "Trending", icon: "🔥" },
+                      { key: "featured", label: "Featured Products", icon: "⭐" },
+                      { key: "bestseller", label: "Best Sellers", icon: "📈" },
+                      { key: "trending", label: "Trending Now", icon: "🔥" },
                       { key: "new", label: "New Arrivals", icon: "🆕" },
+                      { key: "latest", label: "Latest Products", icon: "✨" },
+                      { key: "skincare", label: "Top Skin Care", icon: "💧" },
+                      { key: "vitamins", label: "Vitamins & Supplements", icon: "🍎" },
+                      { key: "wellness", label: "Sexual Wellness", icon: "❤️" },
+                      { key: "explore", label: "Explore Something New", icon: "📦" },
+                      { key: "deals", label: "Deals of the Day", icon: "💰" },
+                      { key: "dermacare", label: "Derma Care", icon: "🛡️" },
+                      { key: "snacks", label: "Healthy Snacks", icon: "☕" },
+                      { key: "environment", label: "Clean Environment", icon: "🌿" },
+                      { key: "protinex", label: "Protinex Top Sellers", icon: "🔥" },
+                      { key: "personal", label: "Personal Care", icon: "✨" },
+                      { key: "travel", label: "Travel Essentials", icon: "🧳" },
+                      { key: "drinks", label: "Nutritional Drinks", icon: "☕" },
+                      { key: "genuine", label: "Genuine Health Products", icon: "💊" },
                     ].map((type) => (
                       <div key={type.key} className="flex items-center gap-2">
                         <Checkbox
@@ -1336,11 +1287,11 @@ export function ProductForm({
                                 ),
                             }));
                           }}
-                          className="h-6 w-6 border-gray-400 cursor-pointer"
+                          className="h-5 w-5 border-gray-400 cursor-pointer"
                         />
                         <Label
                           htmlFor={`productType-${type.key}`}
-                          className="flex items-center gap-1 cursor-pointer"
+                          className="flex items-center gap-1 cursor-pointer text-sm"
                         >
                           <span>{type.icon}</span>
                           {type.label}
@@ -1449,8 +1400,8 @@ export function ProductForm({
                 <div
                   {...getRootProps()}
                   className={`border-2 border-dashed rounded-md p-8 cursor-pointer transition-colors text-center bg-white ${isDragActive
-                      ? "border-blue-400 bg-blue-50"
-                      : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                    ? "border-blue-400 bg-blue-50"
+                    : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
                     }`}
                 >
                   <input {...getInputProps()} />
@@ -1835,71 +1786,7 @@ export function ProductForm({
             </div>
           )}
 
-          {/* Product Tags */}
-          {/* <div className="space-y-4 rounded-lg border p-4 bg-gray-50">
-            <h2 className="text-xl font-semibold border-b pb-2">
-              Product Tags
-            </h2>
-            <div className="flex gap-4">
-              {tagOptions.map((tag) => (
-                <label key={tag.key} className="flex items-center gap-1">
-                  <input
-                    type="checkbox"
-                    checked={product.tags.includes(tag.key)}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      setProduct((prev) => ({
-                        ...prev,
-                        tags: checked
-                          ? [...prev.tags, tag.key]
-                          : prev.tags.filter((t) => t !== tag.key),
-                      }));
-                    }}
-                  />
-                  {tag.label}
-                </label>
-              ))}
-            </div>
-            {product.tags.includes("top") && (
-              <div className="mt-4">
-                <Label>Select brands for Top tag</Label>
-                <MultiSelect
-                  options={brands}
-                  value={product.topBrandIds}
-                  onChange={(val: string[]) =>
-                    setProduct((prev) => ({ ...prev, topBrandIds: val }))
-                  }
-                  placeholder="Select brands for Top"
-                />
-              </div>
-            )}
-            {product.tags.includes("new") && (
-              <div className="mt-4">
-                <Label>Select brands for New tag</Label>
-                <MultiSelect
-                  options={brands}
-                  value={product.newBrandIds}
-                  onChange={(val: string[]) =>
-                    setProduct((prev) => ({ ...prev, newBrandIds: val }))
-                  }
-                  placeholder="Select brands for New"
-                />
-              </div>
-            )}
-            {product.tags.includes("hot") && (
-              <div className="mt-4">
-                <Label>Select brands for Hot tag</Label>
-                <MultiSelect
-                  options={brands}
-                  value={product.hotBrandIds}
-                  onChange={(val: string[]) =>
-                    setProduct((prev) => ({ ...prev, hotBrandIds: val }))
-                  }
-                  placeholder="Select brands for Hot"
-                />
-              </div>
-            )}
-          </div> */}
+
 
           {/* Submit Buttons */}
           <div className="flex justify-end gap-2">
@@ -2071,8 +1958,8 @@ const CategorySelector = ({
                 onSetPrimaryCategory(categoryId);
               }}
               className={`text-xs px-2 py-1 rounded-full ${isPrimary
-                  ? "bg-indigo-100 text-indigo-700"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                ? "bg-indigo-100 text-indigo-700"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
             >
               {isPrimary ? "Primary" : "Set as Primary"}
@@ -2119,8 +2006,8 @@ const CategorySelector = ({
                         onSetPrimaryCategory(childId);
                       }}
                       className={`text-xs px-2 py-1 rounded-full ${isChildPrimary
-                          ? "bg-indigo-100 text-indigo-700"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        ? "bg-indigo-100 text-indigo-700"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                         }`}
                     >
                       {isChildPrimary ? "Primary" : "Set as Primary"}
@@ -2736,8 +2623,8 @@ function ProductsList() {
                         <td className="px-4 py-3 text-sm">
                           <span
                             className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${product.isActive
-                                ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500"
-                                : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500"
+                              ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500"
+                              : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500"
                               }`}
                           >
                             {product.isActive ? "Active" : "Inactive"}
