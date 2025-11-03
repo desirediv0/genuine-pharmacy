@@ -35,7 +35,7 @@ import card4 from "./card4.jpg";
 
 import cover from "./cover-bg.png";
 
-import scratch from "./scratch.png";
+import scratch from "./scratch.jpg";
 
 export {
   bg1,
