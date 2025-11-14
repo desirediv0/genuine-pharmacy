@@ -172,55 +172,65 @@ export default function ProductSectionsPage() {
         }
     };
 
-    const toggleProductSection = async (
-        productId: string,
-        sectionKey: string,
-        isAdding: boolean
-    ) => {
+    const toggleProductSection = async (productId: string, sectionKey: string, isAdding: boolean) => {
         try {
             setUpdateLoading(productId);
 
-            // Get current product to see existing types
             const product = allProducts.find((p) => p.id === productId);
-            if (!product) {
-                toast.error("Product not found");
-                return;
-            }
+            if (!product) return toast.error("Product not found");
 
-            // Get current product types
             const currentTypes = product.productType || [];
-            let newTypes: string[];
 
-            if (isAdding) {
-                // Add the new type if not already present
-                newTypes = currentTypes.includes(sectionKey)
-                    ? currentTypes
-                    : [...currentTypes, sectionKey];
-            } else {
-                // Remove the type
-                newTypes = currentTypes.filter((type) => type !== sectionKey);
-            }
+            const newTypes: string[] = isAdding
+                ? [...new Set([...currentTypes, sectionKey])]
+                : currentTypes.filter((t: string) => t !== sectionKey);
 
-            // Create form data
+            // Send API request
             const formData = new FormData();
             formData.append("productType", JSON.stringify(newTypes));
 
-            // Update product
             const response = await products.updateProduct(productId, formData as any);
-
-            if (response.data.success) {
-                toast.success(
-                    `Product ${isAdding ? "added to" : "removed from"} ${PRODUCT_SECTIONS.find((s) => s.key === sectionKey)?.label
-                    }`
-                );
-                // Refresh product lists
-                fetchProducts();
-            } else {
+            if (!response.data.success) {
                 toast.error("Failed to update product");
+                return;
             }
+
+            toast.success(`Updated successfully`);
+
+            // ************** LOCAL STATE UPDATE — NO FULL FETCH **************
+
+            // 1) Update allProducts
+            const updatedAll = allProducts.map((p) =>
+                p.id === productId ? { ...p, productType: newTypes } : p
+            );
+            setAllProducts(updatedAll);
+
+            // 2) Update productsBySection
+            setProductsBySection((prev) => {
+                const updated = { ...prev };
+
+                // REMOVE
+                if (!isAdding) {
+                    updated[sectionKey] = updated[sectionKey].filter((p) => p.id !== productId);
+                }
+
+                // ADD
+                if (isAdding) {
+                    const productData = updatedAll.find((p) => p.id === productId);
+                    updated[sectionKey] = [...updated[sectionKey], productData!];
+                }
+
+                return updated;
+            });
+
+            // 3) Update filtered list also
+            setFilteredProducts(updatedAll);
+
+            // ************** END **************
+
         } catch (error) {
-            console.error("Error updating product:", error);
-            toast.error("An error occurred while updating the product");
+            console.log(error);
+            toast.error("Error updating product");
         } finally {
             setUpdateLoading(null);
         }
